@@ -21,8 +21,10 @@ import modelo.Utilidades;
  * @author Usuario1
  */
 public class Poblaciones extends HttpServlet {
-   private ArrayList<String> provincias;
-   private String rutaFicheros;
+
+    private ArrayList<String> provincias;
+    private String rutaFicheros;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,20 +34,19 @@ public class Poblaciones extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-   
-   public void init( ServletConfig config ) throws ServletException {
-       
-       provincias = new ArrayList<String>();
-       provincias.add("Albacete");
-       provincias.add("Ciudad Real");
-       provincias.add("Cuenca");
-       provincias.add("Guadalajara");
-       provincias.add("Toledo");
-       rutaFicheros = config.getServletContext().getRealPath("").concat(File.separator).concat("ficheros");
-   }
-   
-   
-       // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
+    public void init(ServletConfig config) throws ServletException {
+
+        provincias = new ArrayList<String>();
+        provincias.add("Albacete");
+        provincias.add("Ciudad Real");
+        provincias.add("Cuenca");
+        provincias.add("Guadalajara");
+        provincias.add("Toledo");
+        rutaFicheros = config.getServletContext().getRealPath("").concat(File.separator).concat("ficheros");
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -57,11 +58,16 @@ public class Poblaciones extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat("Albacete.txt"));
-       request.setAttribute("provincias", provincias);
-       request.setAttribute("provincia", "Albacete");
-       request.setAttribute("pueblos", pueblos);
-       request.getRequestDispatcher("pueblos.jsp").forward(request, response);
+        String provincia = request.getParameter("provincia");
+        if(provincia == null) {
+            provincia = "Albacete";
+        }
+        String provinciaArchivo = provincia.replace(" ", "");
+        ArrayList<String> pueblos = Utilidades.getPoblaciones(rutaFicheros.concat(File.separator).concat(provinciaArchivo.concat(".txt")));
+        request.setAttribute("provincias", provincias);
+        request.setAttribute("provincia", provincia);
+        request.setAttribute("pueblos", pueblos);
+        request.getRequestDispatcher("pueblos.jsp").forward(request, response);
     }
 
     /**
